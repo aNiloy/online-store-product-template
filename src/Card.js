@@ -1,11 +1,26 @@
 import React, { useState } from "react";
-import productImg from "./assets/shoe.jpg";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import bulbImg from "./assets/bulbasaur.jpg";
+import charImg from "./assets/charmander.jpg";
+import squirtImg from "./assets/squirtle.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./Card.css";
 
 const Card = () => {
+
+  const [cardData, setCardData] = useState({color:"", qty:0, size:""});
+
   const [qty, setQty] = useState(0);
+
+  const [image, setImage] = useState(bulbImg);
+
+  const [color, setColor] = useState('Green')
+
+  const [size, setSize] = useState("S");
+
+  console.log(color, qty, size)
 
   const decrement = () => {
     setQty(qty - 1);
@@ -15,13 +30,33 @@ const Card = () => {
     setQty(qty + 1);
   };
 
+  const onQtyChange = (e) => {
+    setQty(parseInt(e.target.value))
+  }
+
+  const changeImage = (image, color) => {
+    setImage(image)
+    setColor(color)
+  }
+
+  const changeSize = (e) => {
+    setSize(e.target.value)
+  }
+
+  const addToCart = () => {
+    setCardData({color: color, qty: qty, size: size})
+    toast.success('Added to cart', {position: toast.POSITION.BOTTOM_CENTER, autoClose: 1500})
+  }
+  
+  console.log(cardData)
+
   return (
     <div className="product-card">
       <div className="img-container">
-        <img src={productImg} alt="shoe" />
+        <img src={image} alt="shoe" />
       </div>
       <div className="info">
-        <h2>Camper</h2>
+        <h2>Pokemon Plushie</h2>
         <div className="stars">
           <FontAwesomeIcon icon={faStar} />
           <FontAwesomeIcon icon={faStar} />
@@ -41,28 +76,29 @@ const Card = () => {
           >
             -
           </button>
-          <input readOnly className="input-field" type="number" value={qty} />
+          <input className="input-field" type="number" onChange={onQtyChange} value={qty}/>
           <button onClick={increment} className="qty-btn">
             +
           </button>
         </div>
-        <div className="var-select">
+        <div className="size-variants">
           <span>Choose a size: </span>
-          <select className="var-select" name="" id="">
-            <option>45</option>
-            <option>46</option>
-            <option>47</option>
+          <select className="size-select" name="" id="" onChange={changeSize}> 
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
           </select>
         </div>
-        <div className="color-select">
-          <p>Choose a color:</p>
-          <input className="radio-btn radio-btn-1" type="radio" name="sample" />
+        <div className="var-select">
+          <p>Choose a variant:</p>
+          <input onClick={() => changeImage(bulbImg, 'Green')} className="radio-btn radio-btn-1" type="radio" name="sample" />
 
-          <input className="radio-btn radio-btn-2" type="radio" name="sample" />
+          <input onClick={() => changeImage(charImg, 'Red')} className="radio-btn radio-btn-2" type="radio" name="sample" />
 
-          <input className="radio-btn radio-btn-3" type="radio" name="sample" />
+          <input onClick={() => changeImage(squirtImg, 'Blue')} className="radio-btn radio-btn-3" type="radio" name="sample" />
         </div>
-        <button className="atc-btn">Add to Cart</button>
+        <button className="atc-btn" onClick={addToCart}>Add to Cart</button>
+        <ToastContainer />
       </div>
     </div>
   );
